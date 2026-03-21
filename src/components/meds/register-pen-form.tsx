@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -15,6 +15,10 @@ export function RegisterPenForm({ onRegister, collapsed = false }: RegisterPenFo
   const [mg, setMg] = useState("");
   const [name, setName] = useState("");
   const [saving, setSaving] = useState(false);
+
+  useEffect(() => {
+    if (collapsed) setExpanded(false);
+  }, [collapsed]);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
