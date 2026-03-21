@@ -87,5 +87,21 @@ export function usePens() {
     return error;
   }, [supabase]);
 
-  return { pens, activePen, loading, registerPen, updatePenRemaining, refetch: fetchPens };
+  const updatePen = useCallback(async (penId: string, updates: { name?: string | null; total_mg?: number; remaining_mg?: number }) => {
+    const { error } = await supabase.from("pens").update(updates).eq("id", penId);
+    if (!error) {
+      setPens(prev => prev.map(p => p.id === penId ? { ...p, ...updates } : p));
+    }
+    return error;
+  }, [supabase]);
+
+  const deletePen = useCallback(async (penId: string) => {
+    const { error } = await supabase.from("pens").delete().eq("id", penId);
+    if (!error) {
+      setPens(prev => prev.filter(p => p.id !== penId));
+    }
+    return error;
+  }, [supabase]);
+
+  return { pens, activePen, loading, registerPen, updatePenRemaining, updatePen, deletePen, refetch: fetchPens };
 }

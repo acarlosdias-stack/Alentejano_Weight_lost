@@ -76,5 +76,21 @@ export function useDoses(penId?: string) {
     return next.toISOString();
   }
 
-  return { doses, loading, logDose, getNextDoseDate, refetch: fetchDoses };
+  const updateDose = useCallback(async (doseId: string, updates: { dose_mg?: number; taken_at?: string; notes?: string | null }) => {
+    const { error } = await supabase.from("doses").update(updates).eq("id", doseId);
+    if (!error) {
+      setDoses(prev => prev.map(d => d.id === doseId ? { ...d, ...updates } : d));
+    }
+    return error;
+  }, [supabase]);
+
+  const deleteDose = useCallback(async (doseId: string) => {
+    const { error } = await supabase.from("doses").delete().eq("id", doseId);
+    if (!error) {
+      setDoses(prev => prev.filter(d => d.id !== doseId));
+    }
+    return error;
+  }, [supabase]);
+
+  return { doses, loading, logDose, updateDose, deleteDose, getNextDoseDate, refetch: fetchDoses };
 }

@@ -9,11 +9,13 @@ import { RegisterPenForm } from "@/components/meds/register-pen-form";
 import { LogDoseModal } from "@/components/meds/log-dose-modal";
 import { DoseHistory } from "@/components/meds/dose-history";
 import { TreatmentTip } from "@/components/meds/treatment-tip";
+import { EditPenModal } from "@/components/meds/edit-pen-modal";
 
 export default function MedsPage() {
-  const { activePen, registerPen, updatePenRemaining } = usePens();
-  const { doses, logDose, getNextDoseDate } = useDoses(activePen?.id);
+  const { activePen, registerPen, updatePenRemaining, updatePen, deletePen } = usePens();
+  const { doses, logDose, updateDose, deleteDose, getNextDoseDate } = useDoses(activePen?.id);
   const [doseModalOpen, setDoseModalOpen] = useState(false);
+  const [editPenOpen, setEditPenOpen] = useState(false);
 
   const handleLogDose = useCallback(async (doseMg: number, takenAt: string, notes?: string) => {
     if (!activePen) return;
@@ -31,9 +33,10 @@ export default function MedsPage() {
           pen={activePen}
           nextDoseDate={getNextDoseDate()}
           onLogDose={() => setDoseModalOpen(true)}
+          onEdit={() => setEditPenOpen(true)}
+          onDelete={deletePen}
         />
       ) : (
-        /* Empty state hero */
         <div className="vitality-gradient px-6 pt-8 pb-10 flex flex-col items-center text-center">
           <Pill size={48} strokeWidth={1.25} className="text-white/35 mb-4" />
           <p className="font-display text-headline-sm text-white">No Active Pen</p>
@@ -48,7 +51,11 @@ export default function MedsPage() {
         {doses.length > 0 && (
           <div>
             <p className="text-label-sm text-on-surface/45 uppercase tracking-wider mb-3">Dose History</p>
-            <DoseHistory doses={doses} />
+            <DoseHistory
+              doses={doses}
+              onUpdateDose={updateDose}
+              onDeleteDose={deleteDose}
+            />
           </div>
         )}
 
@@ -61,6 +68,15 @@ export default function MedsPage() {
           onClose={() => setDoseModalOpen(false)}
           onLog={handleLogDose}
           maxMg={activePen.remaining_mg}
+        />
+      )}
+
+      {activePen && (
+        <EditPenModal
+          pen={activePen}
+          open={editPenOpen}
+          onClose={() => setEditPenOpen(false)}
+          onSave={updatePen}
         />
       )}
     </div>
