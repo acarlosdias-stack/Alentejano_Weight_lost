@@ -1,6 +1,6 @@
 import { type ButtonHTMLAttributes, type ReactNode } from "react";
 
-type ButtonVariant = "primary" | "secondary" | "ghost";
+type ButtonVariant = "primary" | "secondary" | "ghost" | "ghost-white";
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   children: ReactNode;
@@ -22,6 +22,7 @@ export function Button({
     primary: "vitality-gradient text-white",
     secondary: "bg-surface-container-low text-on-surface",
     ghost: "ghost-border text-on-surface hover:bg-surface-container-low",
+    "ghost-white": "bg-white/20 text-white rounded-full hover:bg-white/30 transition-colors",
   };
 
   return (
