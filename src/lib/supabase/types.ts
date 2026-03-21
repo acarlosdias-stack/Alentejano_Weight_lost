@@ -156,6 +156,45 @@ export type Database = {
         };
         Relationships: [];
       };
+      meal_logs: {
+        Row: {
+          id: string;
+          user_id: string;
+          meal_slot: "breakfast" | "morning_snack" | "lunch" | "afternoon_snack" | "dinner" | "extra";
+          name: string;
+          calories_kcal: number | null;
+          protein_g: number | null;
+          carbs_g: number | null;
+          fat_g: number | null;
+          logged_at: string;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          user_id: string;
+          meal_slot: "breakfast" | "morning_snack" | "lunch" | "afternoon_snack" | "dinner" | "extra";
+          name: string;
+          calories_kcal?: number | null;
+          protein_g?: number | null;
+          carbs_g?: number | null;
+          fat_g?: number | null;
+          logged_at?: string;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          user_id?: string;
+          meal_slot?: "breakfast" | "morning_snack" | "lunch" | "afternoon_snack" | "dinner" | "extra";
+          name?: string;
+          calories_kcal?: number | null;
+          protein_g?: number | null;
+          carbs_g?: number | null;
+          fat_g?: number | null;
+          logged_at?: string;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
     };
     Views: Record<string, never>;
     Functions: Record<string, never>;
@@ -168,3 +207,5 @@ export type Profile = Database["public"]["Tables"]["profiles"]["Row"];
 export type Pen = Database["public"]["Tables"]["pens"]["Row"];
 export type Dose = Database["public"]["Tables"]["doses"]["Row"];
 export type WeightLog = Database["public"]["Tables"]["weight_logs"]["Row"];
+export type MealLog = Database["public"]["Tables"]["meal_logs"]["Row"];
+export type MealLogInsert = Database["public"]["Tables"]["meal_logs"]["Insert"];
