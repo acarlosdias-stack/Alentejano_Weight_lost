@@ -10,10 +10,13 @@ import { LogDoseModal } from "@/components/meds/log-dose-modal";
 import { DoseHistory } from "@/components/meds/dose-history";
 import { TreatmentTip } from "@/components/meds/treatment-tip";
 import { EditPenModal } from "@/components/meds/edit-pen-modal";
+import { PenHistoryList } from "@/components/meds/pen-history";
 
 export default function MedsPage() {
-  const { activePen, registerPen, updatePenRemaining, updatePen, deletePen } = usePens();
+  const { pens, activePen, registerPen, updatePenRemaining, updatePen, deletePen } = usePens();
   const { doses, logDose, updateDose, deleteDose, getNextDoseDate } = useDoses(activePen?.id);
+  const totalDosesTaken = doses.filter(d => d.type === 'dose').reduce((s, d) => s + d.dose_mg, 0);
+  const depletedPens = pens.filter(p => p.status !== 'active');
   const [doseModalOpen, setDoseModalOpen] = useState(false);
   const [editPenOpen, setEditPenOpen] = useState(false);
 
@@ -59,6 +62,8 @@ export default function MedsPage() {
           </div>
         )}
 
+        <PenHistoryList pens={depletedPens} />
+
         <TreatmentTip />
       </div>
 
@@ -77,7 +82,7 @@ export default function MedsPage() {
           open={editPenOpen}
           onClose={() => setEditPenOpen(false)}
           onSave={updatePen}
-          totalDosesTaken={doses.length}
+          totalDosesTaken={totalDosesTaken}
         />
       )}
     </div>
