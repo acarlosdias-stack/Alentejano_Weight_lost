@@ -12,7 +12,7 @@ export default function AppLayout({
   return (
     <div className="min-h-screen bg-surface max-w-lg mx-auto">
       <AppHeader />
-      <main className="px-5 pb-24 pt-4">{children}</main>
+      <main className="pt-0">{children}</main>
       <BottomNav />
     </div>
   );

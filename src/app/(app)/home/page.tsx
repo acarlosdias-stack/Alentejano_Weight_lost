@@ -6,8 +6,7 @@ import { usePens } from "@/hooks/use-pens";
 import { useDoses } from "@/hooks/use-doses";
 import { useWeight } from "@/hooks/use-weight";
 import { MomentumCard } from "@/components/home/momentum-card";
-import { PenQuickStatus } from "@/components/home/pen-quick-status";
-import { Card } from "@/components/ui/card";
+import { Calendar } from "lucide-react";
 import { formatDate } from "@/lib/utils";
 
 export default function HomePage() {
@@ -17,53 +16,92 @@ export default function HomePage() {
   const { logs, latestWeight, getMonthlyChange } = useWeight();
 
   if (profileLoading || !profile) {
-    return <p className="text-body-md text-on-surface/50">Loading...</p>;
+    return <p className="p-5 text-body-md text-on-surface/50">Loading...</p>;
   }
 
-  const dosesRemaining = activePen
-    ? Math.floor(activePen.remaining_mg / 2.5)
-    : 0;
+  const dosesRemaining = activePen ? Math.floor(activePen.remaining_mg / 2.5) : 0;
   const monthlyChange = getMonthlyChange();
+  const nextDose = getNextDoseDate();
 
   return (
-    <div className="space-y-6">
+    <div>
+      {/* Full-bleed hero — no horizontal padding */}
       <MomentumCard profile={profile} weightLogs={logs} />
 
-      <PenQuickStatus
-        pen={activePen}
-        nextDoseDate={getNextDoseDate()}
-        dosesRemaining={dosesRemaining}
-      />
+      {/* Tonal section */}
+      <div className="bg-surface-container-low px-5 pt-5 pb-24 space-y-3">
 
-      {/* Compact weight summary — tap to open Activity tab for full logging */}
-      <Link href="/activity">
-        <Card className="cursor-pointer">
-          <div className="flex items-center justify-between">
-            <p className="text-label-sm text-on-surface/50 uppercase tracking-wider">
-              Latest Weight
-            </p>
-            {monthlyChange !== null && (
-              <span className={`text-label-sm font-semibold ${monthlyChange <= 0 ? "text-tertiary-fixed" : "text-red-400"}`}>
-                {monthlyChange > 0 ? "+" : ""}{monthlyChange} kg this month
-              </span>
-            )}
-          </div>
-          {latestWeight ? (
-            <p className="font-display text-display-lg text-primary leading-none mt-1">
-              {latestWeight} <span className="text-body-md text-on-surface/50">kg</span>
-            </p>
-          ) : (
-            <p className="text-body-md text-on-surface/50 mt-2">
-              Tap to log your weight
-            </p>
-          )}
-          {logs[0] && (
-            <p className="text-label-sm text-on-surface/40 mt-1">
-              Last logged: {formatDate(logs[0].logged_at)}
-            </p>
-          )}
-        </Card>
-      </Link>
+        {/* 2-col stat row */}
+        <div className="grid grid-cols-2 gap-3">
+          {/* Weight stat */}
+          <Link href="/activity">
+            <div className="bg-surface-container-lowest rounded-xl p-4 shadow-ambient cursor-pointer">
+              <p className="text-label-sm text-on-surface/45 uppercase tracking-wider mb-2">Weight</p>
+              {latestWeight ? (
+                <>
+                  <p className="font-display font-extrabold text-[1.75rem] text-primary leading-none">
+                    {latestWeight}
+                    <span className="text-body-md font-body font-normal text-on-surface/40 ml-1">kg</span>
+                  </p>
+                  {monthlyChange !== null && (
+                    <p className={`text-label-sm font-semibold mt-1 ${monthlyChange <= 0 ? "text-[#00843a]" : "text-red-400"}`}>
+                      {monthlyChange > 0 ? "+" : ""}{monthlyChange} kg/mo
+                    </p>
+                  )}
+                </>
+              ) : (
+                <p className="text-body-md text-on-surface/40 mt-1">Tap to log</p>
+              )}
+            </div>
+          </Link>
+
+          {/* Mounjaro stat */}
+          <Link href="/meds">
+            <div className="bg-surface-container-lowest rounded-xl p-4 shadow-ambient cursor-pointer">
+              <p className="text-label-sm text-on-surface/45 uppercase tracking-wider mb-2">Mounjaro</p>
+              {activePen ? (
+                <>
+                  <p className="font-display font-extrabold text-[1.75rem] text-primary leading-none">
+                    {activePen.remaining_mg}
+                    <span className="text-body-md font-body font-normal text-on-surface/40 ml-1">mg</span>
+                  </p>
+                  <p className="text-label-sm text-on-surface/45 mt-1">{dosesRemaining} doses left</p>
+                </>
+              ) : (
+                <p className="text-body-md text-on-surface/40 mt-1">No active pen</p>
+              )}
+            </div>
+          </Link>
+        </div>
+
+        {/* Next injection card */}
+        {activePen && (
+          <Link href="/meds">
+            <div className="bg-surface-container-lowest rounded-xl p-4 shadow-ambient cursor-pointer flex items-center gap-3">
+              <div className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+                <Calendar size={16} strokeWidth={1.75} className="text-primary" />
+              </div>
+              <div>
+                <p className="text-label-sm text-on-surface/45 uppercase tracking-wider">Next Injection</p>
+                <p className="font-display text-title-md text-on-surface mt-0.5">
+                  {nextDose ? formatDate(nextDose) : "Not scheduled"}
+                </p>
+              </div>
+            </div>
+          </Link>
+        )}
+
+        {/* Empty state — no pen registered */}
+        {!activePen && (
+          <Link href="/meds">
+            <div className="bg-surface-container-lowest rounded-xl p-4 shadow-ambient cursor-pointer">
+              <p className="text-body-md text-on-surface/40">
+                No active Mounjaro pen. <span className="text-primary font-semibold">Register one →</span>
+              </p>
+            </div>
+          </Link>
+        )}
+      </div>
     </div>
   );
 }
