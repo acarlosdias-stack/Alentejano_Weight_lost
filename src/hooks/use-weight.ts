@@ -25,7 +25,7 @@ export function useWeight() {
       .eq("user_id", user.id)
       .order("logged_at", { ascending: false });
 
-    setLogs(data ?? []);
+    setLogs((data as WeightLog[]) ?? []);
     setLoading(false);
   }, [supabase]);
 
@@ -53,7 +53,7 @@ export function useWeight() {
       .single();
 
     if (!error && data) {
-      setLogs(prev => [data, ...prev]);
+      setLogs(prev => [data as WeightLog, ...prev]);
     }
     return { data, error };
   }, [supabase]);

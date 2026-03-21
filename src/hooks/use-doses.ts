@@ -29,7 +29,7 @@ export function useDoses(penId?: string) {
     }
 
     const { data } = await query;
-    setDoses(data ?? []);
+    setDoses((data as Dose[]) ?? []);
     setLoading(false);
   }, [supabase, penId]);
 
@@ -63,7 +63,7 @@ export function useDoses(penId?: string) {
       .single();
 
     if (!error && data) {
-      setDoses(prev => [data, ...prev]);
+      setDoses(prev => [data as Dose, ...prev]);
     }
     return { data, error };
   }, [supabase]);

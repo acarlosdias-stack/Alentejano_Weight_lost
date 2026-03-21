@@ -24,7 +24,7 @@ export function useProfile() {
       .eq("id", user.id)
       .single();
 
-    setProfile(data);
+    setProfile((data as Profile) ?? null);
     setLoading(false);
   }, [supabase]);
 

@@ -24,7 +24,7 @@ export function usePens() {
       .eq("user_id", user.id)
       .order("registered_at", { ascending: false });
 
-    setPens(data ?? []);
+    setPens((data as Pen[]) ?? []);
     setLoading(false);
   }, [supabase]);
 
@@ -60,7 +60,7 @@ export function usePens() {
       .single();
 
     if (!error && data) {
-      setPens(prev => [data, ...prev]);
+      setPens(prev => [data as Pen, ...prev]);
     }
     return { data, error };
   }, [supabase]);
