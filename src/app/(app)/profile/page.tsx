@@ -79,6 +79,7 @@ export default function ProfilePage() {
 
       <div className="space-y-3">
         <Button
+          type="button"
           variant="secondary"
           fullWidth
           onClick={() => setEditOpen(true)}

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Modal } from "@/components/ui/modal";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -34,6 +34,15 @@ export function EditProfileModal({
     String(profile.daily_carbs_target_g ?? "")
   );
   const [saving, setSaving] = useState(false);
+
+  useEffect(() => {
+    setName(profile.name);
+    setHeightCm(String(profile.height_cm ?? ""));
+    setGoalWeightKg(String(profile.goal_weight_kg ?? ""));
+    setCaloriesTarget(String(profile.daily_calories_target ?? ""));
+    setProteinTarget(String(profile.daily_protein_target_g ?? ""));
+    setCarbsTarget(String(profile.daily_carbs_target_g ?? ""));
+  }, [profile]);
 
   async function handleSave() {
     setSaving(true);
