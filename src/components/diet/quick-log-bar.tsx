@@ -1,10 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { Coffee, Droplets, Apple, Cookie } from "lucide-react";
+import { Coffee, Droplets, Apple, Cookie, type LucideIcon } from "lucide-react";
 import { QUICK_LOG_PRESETS, type QuickLogPreset } from "@/lib/diet-presets";
 
-const ICONS: Record<string, any> = {
+const ICONS: Record<string, LucideIcon> = {
   Coffee,
   Droplets,
   Apple,

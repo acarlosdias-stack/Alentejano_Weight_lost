@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import type { Profile } from "@/lib/supabase/types";
 
@@ -11,9 +12,11 @@ export function UserHeader({ profile }: UserHeaderProps) {
       <div className="relative">
         <div className="w-24 h-24 rounded-full bg-surface-container-low overflow-hidden">
           {profile.avatar_url ? (
-            <img
+            <Image
               src={profile.avatar_url}
               alt={profile.name}
+              width={96}
+              height={96}
               className="w-full h-full object-cover"
             />
           ) : (
