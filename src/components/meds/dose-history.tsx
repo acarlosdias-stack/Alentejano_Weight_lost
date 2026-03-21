@@ -12,21 +12,23 @@ interface DoseHistoryProps {
   onDeleteDose: (doseId: string) => Promise<unknown>;
 }
 
-function DoseRow({
+export function DoseRow({
   dose,
   onEdit,
   onDelete,
+  readOnly = false,
 }: {
   dose: Dose;
-  onEdit: (dose: Dose) => void;
-  onDelete: (doseId: string) => Promise<unknown>;
+  onEdit?: (dose: Dose) => void;
+  onDelete?: (doseId: string) => Promise<unknown>;
+  readOnly?: boolean;
 }) {
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [deleting, setDeleting] = useState(false);
 
   async function handleDelete() {
     setDeleting(true);
-    await onDelete(dose.id);
+    await onDelete?.(dose.id);
     setDeleting(false);
   }
 
@@ -58,26 +60,30 @@ function DoseRow({
               {dose.type === "initialization" ? "Registered" : "Completed"}
             </span>
           </div>
-          <button
-            type="button"
-            onClick={() => onEdit(dose)}
-            aria-label="Edit dose"
-            className="w-7 h-7 rounded-full bg-surface-container-low flex items-center justify-center hover:bg-surface-container transition-colors"
-          >
-            <Pencil size={13} strokeWidth={2} className="text-on-surface/50" />
-          </button>
-          <button
-            type="button"
-            onClick={() => setConfirmDelete(true)}
-            aria-label="Delete dose"
-            className="w-7 h-7 rounded-full bg-surface-container-low flex items-center justify-center hover:bg-red-100 transition-colors"
-          >
-            <Trash2 size={13} strokeWidth={2} className="text-on-surface/40 hover:text-red-500" />
-          </button>
+          {!readOnly && (
+            <>
+              <button
+                type="button"
+                onClick={() => onEdit?.(dose)}
+                aria-label="Edit dose"
+                className="w-7 h-7 rounded-full bg-surface-container-low flex items-center justify-center hover:bg-surface-container transition-colors"
+              >
+                <Pencil size={13} strokeWidth={2} className="text-on-surface/50" />
+              </button>
+              <button
+                type="button"
+                onClick={() => setConfirmDelete(true)}
+                aria-label="Delete dose"
+                className="w-7 h-7 rounded-full bg-surface-container-low flex items-center justify-center hover:bg-red-100 transition-colors"
+              >
+                <Trash2 size={13} strokeWidth={2} className="text-on-surface/40 hover:text-red-500" />
+              </button>
+            </>
+          )}
         </div>
       </div>
 
-      {confirmDelete && (
+      {!readOnly && confirmDelete && (
         <div className="border-t border-outline-variant/10 px-4 py-3 bg-surface-container-low flex items-center justify-between gap-3">
           <p className="text-label-sm text-on-surface/70 font-semibold">Delete this entry?</p>
           <div className="flex gap-2">
