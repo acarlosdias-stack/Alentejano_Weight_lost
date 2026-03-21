@@ -28,8 +28,12 @@ export default function HomePage() {
   const { getNextDoseDate } = useDoses(activePen?.id);
   const { logs, latestWeight, getMonthlyChange } = useWeight();
 
-  if (profileLoading || !profile) {
+  if (profileLoading) {
     return <p className="p-5 text-body-md text-on-surface/50">Loading...</p>;
+  }
+
+  if (!profile) {
+    return <p className="p-5 text-body-md text-on-surface/50">Setting up your profile...</p>;
   }
 
   const dosesRemaining = activePen ? Math.floor(activePen.remaining_mg / 2.5) : 0;

@@ -24,7 +24,17 @@ export function useProfile() {
       .eq("id", user.id)
       .single();
 
-    setProfile((data as Profile) ?? null);
+    if (data) {
+      setProfile(data as Profile);
+    } else {
+      // Profile missing (e.g. signup email confirmation delayed the insert) — create it now
+      const { data: created } = await supabase
+        .from("profiles")
+        .insert({ id: user.id, name: user.email?.split("@")[0] ?? "User" })
+        .select()
+        .single();
+      setProfile((created as Profile) ?? null);
+    }
     setLoading(false);
   }, [supabase]);
 
