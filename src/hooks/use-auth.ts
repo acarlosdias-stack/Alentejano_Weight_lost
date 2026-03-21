@@ -23,10 +23,15 @@ export function useAuth() {
       return;
     }
     if (data.user) {
-      await supabase.from("profiles").insert({
+      const { error: profileError } = await supabase.from("profiles").insert({
         id: data.user.id,
         name,
       });
+      if (profileError) {
+        setError(profileError.message);
+        setLoading(false);
+        return;
+      }
     }
     setLoading(false);
     router.push("/home");
@@ -51,7 +56,14 @@ export function useAuth() {
   }
 
   async function signOut() {
-    await supabase.auth.signOut();
+    setLoading(true);
+    const { error: authError } = await supabase.auth.signOut();
+    if (authError) {
+      setError(authError.message);
+      setLoading(false);
+      return;
+    }
+    setLoading(false);
     router.push("/login");
     router.refresh();
   }
