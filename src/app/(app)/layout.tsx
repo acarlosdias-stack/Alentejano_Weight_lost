@@ -2,6 +2,8 @@ import type { ReactNode } from "react";
 import { AppHeader } from "@/components/layout/app-header";
 import { BottomNav } from "@/components/layout/bottom-nav";
 
+export const dynamic = 'force-dynamic';
+
 export default function AppLayout({
   children,
 }: {
