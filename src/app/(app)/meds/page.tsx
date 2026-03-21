@@ -15,6 +15,8 @@ import { PenHistoryList } from "@/components/meds/pen-history";
 export default function MedsPage() {
   const { pens, activePen, registerPen, updatePenRemaining, updatePen, deletePen } = usePens();
   const { doses, logDose, updateDose, deleteDose, getNextDoseDate } = useDoses(activePen?.id);
+  // Only valid when activePen is set — useDoses(activePen?.id) returns all-pens data when penId is undefined.
+  // Safe: EditPenModal is gated by {activePen && ...} so totalDosesTaken is never consumed without an active pen.
   const totalDosesTaken = doses.filter(d => d.type === 'dose').reduce((s, d) => s + d.dose_mg, 0);
   const depletedPens = pens.filter(p => p.status !== 'active');
   const [doseModalOpen, setDoseModalOpen] = useState(false);

@@ -65,7 +65,7 @@ function PenHistoryItem({ pen }: { pen: Pen }) {
         </div>
         <div className="flex items-center gap-2 flex-shrink-0 ml-3">
           <span className="rounded text-[0.625rem] font-body font-bold px-2 py-0.5 uppercase tracking-wide bg-on-surface/10 text-on-surface/50">
-            Depleted
+            {pen.status === 'active' ? 'In Use' : 'Depleted'}
           </span>
           {expanded
             ? <ChevronUp size={16} strokeWidth={1.75} className="text-on-surface/40" />
