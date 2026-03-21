@@ -99,7 +99,7 @@ export default function ActivityPage() {
   return (
     <div>
       {/* Hero */}
-      <div className="vitality-gradient px-5 pt-10 pb-8 relative overflow-hidden">
+      <div className="vitality-gradient px-5 pt-6 pb-5 relative overflow-hidden">
         <div className="relative z-10">
           <span className="font-body text-[10px] font-bold uppercase tracking-widest text-white/60 block mb-1">
             Daily Momentum
@@ -170,7 +170,7 @@ export default function ActivityPage() {
                   {EXERCISE_HISTORY.map((item) => {
                     const Icon = item.icon;
                     return (
-                      <div key={item.id} className="bg-surface-container-lowest p-4 rounded-xl flex items-center justify-between hover:translate-x-0.5 transition-transform cursor-pointer">
+                      <div key={item.id} className="bg-surface-container-lowest p-3 rounded-xl flex items-center justify-between hover:translate-x-0.5 transition-transform cursor-pointer">
                         <div className="flex items-center gap-3">
                           <div className="w-11 h-11 rounded-xl bg-surface-container-low flex items-center justify-center flex-shrink-0">
                             <Icon size={20} strokeWidth={1.75} className={item.iconColor} />

@@ -40,6 +40,10 @@ export default function HomePage() {
   const monthlyChange = getMonthlyChange();
   const nextDose = getNextDoseDate();
 
+  const today = new Date().toISOString().split("T")[0];
+  const todayLog = logs.find((l) => l.logged_at.split("T")[0] === today);
+  const todayWeight = todayLog?.weight_kg ?? null;
+
   return (
     <div>
       {/* Full-bleed hero — no horizontal padding */}
@@ -53,11 +57,18 @@ export default function HomePage() {
           {/* Weight stat */}
           <Link href="/activity">
             <div className="bg-surface-container-lowest rounded-xl p-4 shadow-ambient cursor-pointer">
-              <p className="text-label-sm text-on-surface/45 uppercase tracking-wider mb-2">Weight</p>
-              {latestWeight ? (
+              <div className="flex items-center justify-between mb-2">
+                <p className="text-label-sm text-on-surface/45 uppercase tracking-wider">Weight</p>
+                {todayWeight ? (
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-tertiary bg-tertiary/10 px-2 py-0.5 rounded-full">Today</span>
+                ) : latestWeight ? (
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-on-surface/30 px-2 py-0.5 rounded-full border border-outline-variant/40">Log</span>
+                ) : null}
+              </div>
+              {todayWeight ? (
                 <>
                   <p className="font-display font-extrabold text-[1.75rem] text-primary leading-none">
-                    {latestWeight}
+                    {todayWeight}
                     <span className="text-body-md font-body font-normal text-on-surface/40 ml-1">kg</span>
                   </p>
                   {monthlyChange !== null && (
@@ -65,6 +76,14 @@ export default function HomePage() {
                       {monthlyChange > 0 ? "+" : ""}{monthlyChange} kg/mo
                     </p>
                   )}
+                </>
+              ) : latestWeight ? (
+                <>
+                  <p className="font-display font-extrabold text-[1.75rem] text-on-surface/30 leading-none">
+                    {latestWeight}
+                    <span className="text-body-md font-body font-normal text-on-surface/25 ml-1">kg</span>
+                  </p>
+                  <p className="text-label-sm text-on-surface/40 mt-1">Not logged today</p>
                 </>
               ) : (
                 <p className="text-body-md text-on-surface/40 mt-1">Tap to log</p>
