@@ -2,14 +2,10 @@ import type { ReactNode } from "react";
 
 export const dynamic = 'force-dynamic';
 
-export default function AuthLayout({
-  children,
-}: {
-  children: ReactNode;
-}) {
+export default function AuthLayout({ children }: { children: ReactNode }) {
   return (
-    <div className="min-h-screen bg-surface flex items-center justify-center p-6">
-      <div className="w-full max-w-sm">{children}</div>
+    <div className="min-h-screen flex flex-col bg-surface">
+      {children}
     </div>
   );
 }
