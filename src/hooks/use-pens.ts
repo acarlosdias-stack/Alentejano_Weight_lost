@@ -87,7 +87,7 @@ export function usePens() {
     return error;
   }, [supabase]);
 
-  const updatePen = useCallback(async (penId: string, updates: { name?: string | null; total_mg?: number; remaining_mg?: number }) => {
+  const updatePen = useCallback(async (penId: string, updates: { name?: string | null; total_mg?: number; remaining_mg?: number; status?: 'active' | 'depleted' }) => {
     const { error } = await supabase.from("pens").update(updates).eq("id", penId);
     if (!error) {
       setPens(prev => prev.map(p => p.id === penId ? { ...p, ...updates } : p));
