@@ -10,10 +10,11 @@ interface EditPenModalProps {
   pen: Pen;
   open: boolean;
   onClose: () => void;
-  onSave: (penId: string, updates: { name?: string | null; total_mg?: number; remaining_mg?: number }) => Promise<unknown>;
+  onSave: (penId: string, updates: { name?: string | null; total_mg?: number; remaining_mg?: number; status?: 'active' | 'depleted' }) => Promise<unknown>;
+  totalDosesTaken: number;
 }
 
-export function EditPenModal({ pen, open, onClose, onSave }: EditPenModalProps) {
+export function EditPenModal({ pen, open, onClose, onSave, totalDosesTaken }: EditPenModalProps) {
   const [name, setName] = useState(pen.name ?? "");
   const [totalMg, setTotalMg] = useState(String(pen.total_mg));
   const [remainingMg, setRemainingMg] = useState(String(pen.remaining_mg));
@@ -34,6 +35,7 @@ export function EditPenModal({ pen, open, onClose, onSave }: EditPenModalProps) 
       name: name || null,
       total_mg: Number(totalMg),
       remaining_mg: Number(remainingMg),
+      status: Number(remainingMg) <= 0 ? 'depleted' : 'active',
     });
     setSaving(false);
     onClose();
@@ -55,7 +57,11 @@ export function EditPenModal({ pen, open, onClose, onSave }: EditPenModalProps) 
           min="0"
           suffix="mg"
           value={totalMg}
-          onChange={(e) => setTotalMg(e.target.value)}
+          onChange={(e) => {
+            const newTotal = Number(e.target.value);
+            setTotalMg(e.target.value);
+            setRemainingMg(String(Math.max(0, newTotal - totalDosesTaken)));
+          }}
           required
         />
         <Input
