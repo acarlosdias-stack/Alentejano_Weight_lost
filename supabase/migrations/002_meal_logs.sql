@@ -31,4 +31,6 @@ CREATE POLICY "Users can delete own meal logs"
   ON meal_logs FOR DELETE USING (auth.uid() = user_id);
 
 CREATE POLICY "Users can update own meal logs"
-  ON meal_logs FOR UPDATE USING (auth.uid() = user_id);
+  ON meal_logs FOR UPDATE
+  USING (auth.uid() = user_id)
+  WITH CHECK (auth.uid() = user_id);
