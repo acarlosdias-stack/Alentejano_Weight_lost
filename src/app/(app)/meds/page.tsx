@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { usePens } from "@/hooks/use-pens";
 import { useDoses } from "@/hooks/use-doses";
 import { RegisterPenForm } from "@/components/meds/register-pen-form";
@@ -14,13 +14,13 @@ export default function MedsPage() {
   const { doses, logDose, getNextDoseDate } = useDoses(activePen?.id);
   const [doseModalOpen, setDoseModalOpen] = useState(false);
 
-  async function handleLogDose(doseMg: number, takenAt: string, notes?: string) {
+  const handleLogDose = useCallback(async (doseMg: number, takenAt: string, notes?: string) => {
     if (!activePen) return;
     const { error } = await logDose(activePen.id, doseMg, takenAt, "dose", notes);
     if (!error) {
       await updatePenRemaining(activePen.id, activePen.remaining_mg - doseMg);
     }
-  }
+  }, [activePen, logDose, updatePenRemaining]);
 
   return (
     <div className="space-y-6">

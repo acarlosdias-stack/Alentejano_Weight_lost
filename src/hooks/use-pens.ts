@@ -1,11 +1,11 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useMemo } from "react";
 import { createClient } from "@/lib/supabase/client";
 import type { Pen } from "@/lib/supabase/types";
 
 export function usePens() {
-  const supabase = createClient();
+  const supabase = useMemo(() => createClient(), []);
   const [pens, setPens] = useState<Pen[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -34,13 +34,19 @@ export function usePens() {
 
   const activePen = pens.find((p) => p.status === "active") ?? null;
 
-  async function registerPen(totalMg: number, name?: string) {
+  const registerPen = useCallback(async (totalMg: number, name?: string) => {
     const {
       data: { user },
     } = await supabase.auth.getUser();
     if (!user) return { data: null, error: new Error("Not authenticated") };
 
-    const penName = name || `Pen #${pens.length + 1}`;
+    // Use the server count to avoid stale closure on pens.length
+    const { count } = await supabase
+      .from("pens")
+      .select("id", { count: "exact", head: true })
+      .eq("user_id", user.id);
+
+    const penName = name || `Pen #${(count ?? 0) + 1}`;
 
     const { data, error } = await supabase
       .from("pens")
@@ -54,13 +60,13 @@ export function usePens() {
       .single();
 
     if (!error && data) {
-      setPens([data, ...pens]);
+      setPens(prev => [data, ...prev]);
     }
     return { data, error };
-  }
+  }, [supabase]);
 
-  async function updatePenRemaining(penId: string, newRemaining: number) {
-    const status = newRemaining <= 0 ? "depleted" : "active";
+  const updatePenRemaining = useCallback(async (penId: string, newRemaining: number) => {
+    const status: "active" | "depleted" = newRemaining <= 0 ? "depleted" : "active";
     const { error } = await supabase
       .from("pens")
       .update({
@@ -70,8 +76,8 @@ export function usePens() {
       .eq("id", penId);
 
     if (!error) {
-      setPens(
-        pens.map((p) =>
+      setPens(prev =>
+        prev.map((p) =>
           p.id === penId
             ? { ...p, remaining_mg: Math.max(newRemaining, 0), status }
             : p
@@ -79,7 +85,7 @@ export function usePens() {
       );
     }
     return error;
-  }
+  }, [supabase]);
 
   return { pens, activePen, loading, registerPen, updatePenRemaining, refetch: fetchPens };
 }

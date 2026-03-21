@@ -1,11 +1,11 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useMemo } from "react";
 import { createClient } from "@/lib/supabase/client";
 import type { Dose } from "@/lib/supabase/types";
 
 export function useDoses(penId?: string) {
-  const supabase = createClient();
+  const supabase = useMemo(() => createClient(), []);
   const [doses, setDoses] = useState<Dose[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -37,13 +37,13 @@ export function useDoses(penId?: string) {
     fetchDoses();
   }, [fetchDoses]);
 
-  async function logDose(
+  const logDose = useCallback(async (
     penId: string,
     doseMg: number,
     takenAt: string,
     type: "initialization" | "dose" = "dose",
     notes?: string
-  ) {
+  ) => {
     const {
       data: { user },
     } = await supabase.auth.getUser();
@@ -63,10 +63,10 @@ export function useDoses(penId?: string) {
       .single();
 
     if (!error && data) {
-      setDoses([data, ...doses]);
+      setDoses(prev => [data, ...prev]);
     }
     return { data, error };
-  }
+  }, [supabase]);
 
   function getNextDoseDate(): string | null {
     if (doses.length === 0) return null;
