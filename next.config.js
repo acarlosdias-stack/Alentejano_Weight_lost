@@ -6,6 +6,9 @@ const withPWA = require("next-pwa")({
 });
 
 /** @type {import('next').NextConfig} */
-const nextConfig = {};
+const nextConfig = {
+  reactStrictMode: true,
+};
 
+// next-pwa v5 is CJS-only; if migrating to ESM config, switch to @ducanh2912/next-pwa
 module.exports = withPWA(nextConfig);
