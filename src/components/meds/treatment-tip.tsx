@@ -1,31 +1,17 @@
-"use client";
-
-import { useMemo } from "react";
-import { Card } from "@/components/ui/card";
-
-const tips = [
-  "Consistency is key to your Mounjaro therapy. Try to log your doses at the same time each week to maintain stable levels in your system.",
-  "Store your Mounjaro pen in the refrigerator between 2-8°C. Do not freeze.",
-  "Rotate injection sites between your abdomen, thigh, and upper arm to reduce irritation.",
-  "Stay hydrated while on Mounjaro. Aim for at least 2.5L of water daily.",
-];
+import { Lightbulb } from "lucide-react";
 
 export function TreatmentTip() {
-  // Deterministic per day — avoids SSR/client hydration mismatch
-  const tip = useMemo(() => {
-    const dayIndex = new Date().getDay(); // 0-6
-    return tips[dayIndex % tips.length];
-  }, []);
-
   return (
-    <Card variant="flat" className="flex items-start gap-3">
-      <span className="text-xl text-tertiary-fixed">💚</span>
-      <div>
-        <p className="font-display text-title-md font-semibold">
-          Treatment Tip
-        </p>
-        <p className="text-body-md text-on-surface/70 mt-1">{tip}</p>
+    <div className="bg-surface-container-lowest rounded-xl p-4 shadow-ambient flex gap-3 items-start">
+      <div className="w-8 h-8 rounded-full bg-tertiary-fixed/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+        <Lightbulb size={15} strokeWidth={1.75} className="text-[#006622]" />
       </div>
-    </Card>
+      <div>
+        <p className="font-display text-title-md font-semibold text-on-surface mb-1">Treatment Tip</p>
+        <p className="text-body-md text-on-surface/55">
+          Rotate injection sites between your abdomen, thigh, and upper arm to reduce irritation.
+        </p>
+      </div>
+    </div>
   );
 }

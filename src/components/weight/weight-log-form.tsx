@@ -1,8 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { Card } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
 interface WeightLogFormProps {
@@ -23,29 +21,27 @@ export function WeightLogForm({ onLog }: WeightLogFormProps) {
   }
 
   return (
-    <Card>
-      <h3 className="font-display text-headline-sm mb-4">Weight Log</h3>
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <p className="text-label-sm text-on-surface/50 uppercase tracking-wider">
-          Manual Entry (KG)
-        </p>
-        <div className="flex gap-3">
-          <div className="flex-1">
-            <Input
-              type="number"
-              step="0.1"
-              placeholder="78.5"
-              suffix="kg"
-              value={weight}
-              onChange={(e) => setWeight(e.target.value)}
-              required
-            />
-          </div>
-          <Button type="submit" disabled={saving || !weight}>
-            Log
-          </Button>
+    <div className="bg-surface-container-lowest rounded-xl p-5 shadow-ambient mx-5">
+      <p className="text-label-sm text-on-surface/45 uppercase tracking-wider mb-4">Manual Entry (kg)</p>
+      <form onSubmit={handleSubmit}>
+        <div className="flex items-center justify-center gap-2 mb-5">
+          <input
+            id="weight-input"
+            type="number"
+            step="0.1"
+            min="0"
+            placeholder="0.0"
+            value={weight}
+            onChange={(e) => setWeight(e.target.value)}
+            required
+            className="font-display font-extrabold text-[2.5rem] text-on-surface text-center bg-transparent outline-none w-36 ghost-border rounded-xl py-2"
+          />
+          <span className="font-body text-body-md text-on-surface/40 mt-2">kg</span>
         </div>
+        <Button type="submit" fullWidth disabled={saving || !weight}>
+          {saving ? "Logging..." : "Log Weight"}
+        </Button>
       </form>
-    </Card>
+    </div>
   );
 }

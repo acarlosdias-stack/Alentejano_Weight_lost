@@ -25,9 +25,13 @@ export async function middleware(request: NextRequest) {
     }
   );
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  let user = null;
+  try {
+    const { data } = await supabase.auth.getSession();
+    user = data.session?.user ?? null;
+  } catch {
+    // treat as unauthenticated
+  }
 
   const pathname = request.nextUrl.pathname;
   const isAuthPage =

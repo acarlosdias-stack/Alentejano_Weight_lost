@@ -9,6 +9,19 @@ import { MomentumCard } from "@/components/home/momentum-card";
 import { Calendar } from "lucide-react";
 import { formatDate } from "@/lib/utils";
 
+function getDaysAway(dateStr: string): string {
+  const target = new Date(dateStr);
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  target.setHours(0, 0, 0, 0);
+  const diff = Math.round((target.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+  if (diff === 0) return "Today";
+  if (diff === 1) return "Tomorrow";
+  if (diff === -1) return "Yesterday";
+  if (diff > 0) return `in ${diff} days`;
+  return `${Math.abs(diff)} days ago`;
+}
+
 export default function HomePage() {
   const { profile, loading: profileLoading } = useProfile();
   const { activePen } = usePens();
@@ -44,7 +57,7 @@ export default function HomePage() {
                     <span className="text-body-md font-body font-normal text-on-surface/40 ml-1">kg</span>
                   </p>
                   {monthlyChange !== null && (
-                    <p className={`text-label-sm font-semibold mt-1 ${monthlyChange <= 0 ? "text-[#00843a]" : "text-red-400"}`}>
+                    <p className={`text-label-sm font-semibold mt-1 ${monthlyChange <= 0 ? "text-tertiary" : "text-red-400"}`}>
                       {monthlyChange > 0 ? "+" : ""}{monthlyChange} kg/mo
                     </p>
                   )}
@@ -86,6 +99,9 @@ export default function HomePage() {
                 <p className="font-display text-title-md text-on-surface mt-0.5">
                   {nextDose ? formatDate(nextDose) : "Not scheduled"}
                 </p>
+                {nextDose && (
+                  <p className="text-label-sm text-on-surface/45 mt-0.5">{getDaysAway(nextDose)}</p>
+                )}
               </div>
             </div>
           </Link>
