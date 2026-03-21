@@ -14,7 +14,9 @@ interface DietHeroCardProps {
 
 export function DietHeroCard({ profile, totals }: DietHeroCardProps) {
   const hasTargets =
-    profile.daily_calories_target && profile.daily_calories_target > 0;
+    (profile.daily_calories_target && profile.daily_calories_target > 0) ||
+    (profile.daily_protein_target_g && profile.daily_protein_target_g > 0) ||
+    (profile.daily_water_target_ml && profile.daily_water_target_ml > 0);
 
   return (
     <div className="vitality-gradient px-6 pt-6 pb-8">

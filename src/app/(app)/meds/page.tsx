@@ -77,6 +77,7 @@ export default function MedsPage() {
           open={editPenOpen}
           onClose={() => setEditPenOpen(false)}
           onSave={updatePen}
+          totalDosesTaken={doses.length}
         />
       )}
     </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Plus, ChevronDown, ChevronUp, Trash2 } from "lucide-react";
 import type { MealLog } from "@/lib/supabase/types";
 import type { MealSlotConfig } from "@/lib/diet-presets";
@@ -22,6 +22,22 @@ export function MealSlot({ config, meals, onAdd, onDelete }: MealSlotProps) {
   const [expanded, setExpanded] = useState<boolean>(
     () => meals.length > 0 || isCurrentSlot(config)
   );
+  // Track whether user manually collapsed so we don't re-expand over their preference
+  const manuallyCollapsed = useRef(false);
+
+  // Auto-expand when async data arrives (meals starts empty while hook is loading)
+  useEffect(() => {
+    if (meals.length > 0 && !manuallyCollapsed.current) {
+      setExpanded(true);
+    }
+  }, [meals.length]);
+
+  const handleToggle = () => {
+    const next = !expanded;
+    if (!next) manuallyCollapsed.current = true;
+    else manuallyCollapsed.current = false;
+    setExpanded(next);
+  };
 
   const slotCalories = meals.reduce((sum, m) => sum + (m.calories_kcal ?? 0), 0);
 
@@ -30,7 +46,7 @@ export function MealSlot({ config, meals, onAdd, onDelete }: MealSlotProps) {
       {/* Header */}
       <div
         className="flex items-center justify-between px-4 py-3 cursor-pointer"
-        onClick={() => setExpanded((prev) => !prev)}
+        onClick={handleToggle}
       >
         <div className="flex items-center gap-3">
           {expanded ? (
