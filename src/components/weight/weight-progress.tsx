@@ -10,7 +10,7 @@ export function WeightProgress({ logs, monthlyChange }: WeightProgressProps) {
   if (logs.length === 0) return null;
 
   return (
-    <div className="mx-5">
+    <div>
       <div className="flex items-center justify-between mb-3">
         <p className="text-label-sm text-on-surface/45 uppercase tracking-wider">Recent Entries</p>
         {monthlyChange !== null && (

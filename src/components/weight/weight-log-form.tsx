@@ -21,7 +21,7 @@ export function WeightLogForm({ onLog }: WeightLogFormProps) {
   }
 
   return (
-    <div className="bg-surface-container-lowest rounded-xl p-5 shadow-ambient mx-5">
+    <div className="bg-surface-container-lowest rounded-xl p-5 shadow-ambient">
       <p className="text-label-sm text-on-surface/45 uppercase tracking-wider mb-4">Manual Entry (kg)</p>
       <form onSubmit={handleSubmit}>
         <div className="flex items-center justify-center gap-2 mb-5">
