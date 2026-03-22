@@ -1,7 +1,6 @@
 "use client";
 
 import { useRef, useState } from "react";
-import Image from "next/image";
 import { LogOut, Camera } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import type { Profile } from "@/lib/supabase/types";
@@ -59,11 +58,10 @@ export function UserHeader({ profile, onSignOut, onAvatarChange }: UserHeaderPro
         >
           <div className="w-24 h-24 rounded-full bg-white/20 border-2 border-white/50 overflow-hidden">
             {displayAvatar ? (
-              <Image
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
                 src={displayAvatar}
-                alt={profile.name}
-                width={96}
-                height={96}
+                alt={profile.name ?? "Foto de perfil"}
                 className={`w-full h-full object-cover transition-opacity ${uploading ? "opacity-60" : ""}`}
               />
             ) : (

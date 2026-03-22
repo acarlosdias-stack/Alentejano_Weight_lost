@@ -1,7 +1,6 @@
 "use client";
 
 import { useRef, useState } from "react";
-import Image from "next/image";
 import { Upload, X, RefreshCw, ClipboardList } from "lucide-react";
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 
@@ -65,11 +64,11 @@ export function DietPlanCard({ imageUrl, uploading, error, onUpload }: DietPlanC
       ) : (
         <div className="rounded-xl overflow-hidden border border-outline-variant/20">
           <div className="relative w-full h-40 bg-surface-container-low cursor-pointer" onClick={() => setLightboxOpen(true)}>
-            <Image
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
               src={imageUrl}
               alt="Plano alimentar"
-              fill
-              className="object-cover"
+              className="w-full h-full object-cover"
             />
             <div className="absolute inset-0 bg-black/0 hover:bg-black/10 transition-colors flex items-end justify-end p-3">
               <span className="bg-primary text-white text-label-sm font-bold px-3 py-1.5 rounded-full shadow">

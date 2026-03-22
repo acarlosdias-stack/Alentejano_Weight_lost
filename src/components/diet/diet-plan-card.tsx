@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { X, ClipboardList } from "lucide-react";
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
@@ -37,7 +36,8 @@ export function DietPagePlanCard({ imageUrl }: DietPagePlanCardProps) {
         onClick={() => setLightboxOpen(true)}
       >
         <div className="relative w-full h-24">
-          <Image src={imageUrl} alt="Plano alimentar" fill className="object-cover object-top" />
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={imageUrl} alt="Plano alimentar" className="w-full h-full object-cover object-top" />
           <div className="absolute inset-0 bg-gradient-to-r from-black/30 to-transparent flex items-center px-4">
             <div>
               <p className="text-white text-label-sm uppercase tracking-wider font-semibold opacity-80">Plano Alimentar</p>
