@@ -22,6 +22,7 @@ export type Database = {
           daily_carbs_target_g: number | null;
           daily_fats_target_g: number | null;
           daily_water_target_ml: number;
+          diet_plan_image_url: string | null;
           created_at: string;
           updated_at: string;
         };
@@ -37,6 +38,7 @@ export type Database = {
           daily_carbs_target_g?: number | null;
           daily_fats_target_g?: number | null;
           daily_water_target_ml?: number;
+          diet_plan_image_url?: string | null;
           created_at?: string;
           updated_at?: string;
         };
@@ -52,6 +54,7 @@ export type Database = {
           daily_carbs_target_g?: number | null;
           daily_fats_target_g?: number | null;
           daily_water_target_ml?: number;
+          diet_plan_image_url?: string | null;
           created_at?: string;
           updated_at?: string;
         };
