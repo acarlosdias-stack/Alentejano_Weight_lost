@@ -1,11 +1,18 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { UtensilsCrossed, Moon } from "lucide-react";
 import { getMealState } from "@/lib/meal-state";
 
 export function NextMealCard() {
-  const state = getMealState(new Date());
+  const [state, setState] = useState(() => getMealState(new Date()));
+
+  useEffect(() => {
+    const id = setInterval(() => setState(getMealState(new Date())), 60_000);
+    return () => clearInterval(id);
+  }, []);
+
   const isDone = state.kind === 'done';
   const isActive = state.kind === 'active';
 
