@@ -3,15 +3,18 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { UtensilsCrossed, Moon } from "lucide-react";
-import { getMealState } from "@/lib/meal-state";
+import { getMealState, type MealState } from "@/lib/meal-state";
 
 export function NextMealCard() {
-  const [state, setState] = useState(() => getMealState(new Date()));
+  const [state, setState] = useState<MealState | null>(null);
 
   useEffect(() => {
+    setState(getMealState(new Date()));
     const id = setInterval(() => setState(getMealState(new Date())), 60_000);
     return () => clearInterval(id);
   }, []);
+
+  if (!state) return null;
 
   const isDone = state.kind === 'done';
   const isActive = state.kind === 'active';
