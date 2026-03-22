@@ -1,48 +1,94 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { useProfile } from "@/hooks/use-profile";
 import { useWeight } from "@/hooks/use-weight";
+import { useActivity } from "@/hooks/use-activity";
 import {
   Plus,
   Watch,
   Dumbbell,
   TrendingDown,
   Camera,
-  Footprints,
-  Zap,
-  Bike,
-  ChevronRight,
   Activity,
-  Pencil,
-  Trash2,
+  Loader2,
   Check,
   X,
+  Pencil,
+  Trash2,
 } from "lucide-react";
 import { formatDate } from "@/lib/utils";
-import type { WeightLog } from "@/lib/supabase/types";
-
-const EXERCISE_HISTORY = [
-  { id: 1, icon: Footprints, iconColor: "text-primary", name: "Morning Run", detail: "Today · 32 min · 4.2 km", kcal: 340 },
-  { id: 2, icon: Zap, iconColor: "text-tertiary", name: "HIIT Training", detail: "Yesterday · 45 min · High Intensity", kcal: 485 },
-  { id: 3, icon: Bike, iconColor: "text-primary-container", name: "Cycling Path", detail: "Oct 24 · 1h 12 min · 18.5 km", kcal: 612 },
-];
+import { LogWorkoutModal } from "@/components/activity/log-workout-modal";
+import { LogTreadmillModal } from "@/components/activity/log-treadmill-modal";
+import { ActivityHistory } from "@/components/activity/activity-history";
+import type { WeightLog, ActivityLog, ActivityLogInsert, ActivityLogUpdate } from "@/lib/supabase/types";
 
 export default function ActivityPage() {
   const { profile } = useProfile();
   const { logs, logWeight, updateWeight, deleteWeight, getMonthlyChange } = useWeight();
+  const { workoutLogs, treadmillLogs, addActivity, updateActivity, deleteActivity } = useActivity();
 
   const today = new Date().toISOString().split("T")[0];
 
+  // Weight log form state
   const [weight, setWeight] = useState("");
   const [date, setDate] = useState(today);
   const [saving, setSaving] = useState(false);
 
+  // Weight scan state
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [scanning, setScanning] = useState(false);
+  const [scanPreview, setScanPreview] = useState<string | null>(null);
+  const [scanError, setScanError] = useState<string | null>(null);
+
+  // Weight log edit state
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editWeight, setEditWeight] = useState("");
   const [editDate, setEditDate] = useState("");
   const [editSaving, setEditSaving] = useState(false);
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
+
+  // Activity modal state
+  const [workoutModalOpen, setWorkoutModalOpen] = useState(false);
+  const [treadmillModalOpen, setTreadmillModalOpen] = useState(false);
+  const [editSession, setEditSession] = useState<ActivityLog | undefined>(undefined);
+
+  const handleScanImage = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = async (ev) => {
+      const dataUrl = ev.target?.result as string;
+      setScanPreview(dataUrl);
+      setScanError(null);
+      setScanning(true);
+
+      const base64 = dataUrl.split(",")[1];
+      const mimeType = file.type || "image/jpeg";
+
+      try {
+        const res = await fetch("/api/scan-weight", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ imageBase64: base64, mimeType }),
+        });
+        const data = await res.json();
+        if (data.weight !== null && data.weight !== undefined) {
+          setWeight(String(data.weight));
+          setScanError(null);
+        } else {
+          setScanError("Couldn't read a weight — enter manually.");
+        }
+      } catch {
+        setScanError("Scan failed — enter manually.");
+      } finally {
+        setScanning(false);
+        if (fileInputRef.current) fileInputRef.current.value = "";
+      }
+    };
+    reader.readAsDataURL(file);
+  }, []);
 
   const handleLogWeight = useCallback(
     async (e: React.FormEvent) => {
@@ -89,6 +135,37 @@ export default function ActivityPage() {
     [deleteWeight]
   );
 
+  // Activity handlers
+  const handleSaveActivity = useCallback(
+    async (data: ActivityLogInsert | ActivityLogUpdate, id?: string) => {
+      if (id) {
+        await updateActivity(id, data as ActivityLogUpdate);
+      } else {
+        await addActivity(data as ActivityLogInsert);
+      }
+    },
+    [addActivity, updateActivity]
+  );
+
+  const handleEditSession = useCallback((session: ActivityLog) => {
+    setEditSession(session);
+    if (session.type === "workout") {
+      setWorkoutModalOpen(true);
+    } else {
+      setTreadmillModalOpen(true);
+    }
+  }, []);
+
+  const handleCloseWorkoutModal = useCallback(() => {
+    setWorkoutModalOpen(false);
+    setEditSession(undefined);
+  }, []);
+
+  const handleCloseTreadmillModal = useCallback(() => {
+    setTreadmillModalOpen(false);
+    setEditSession(undefined);
+  }, []);
+
   const monthlyChange = getMonthlyChange();
   const latestLog = logs[0];
   const bmi = latestLog?.bmi ?? null;
@@ -98,6 +175,20 @@ export default function ActivityPage() {
 
   return (
     <div>
+      {/* Modals */}
+      <LogWorkoutModal
+        open={workoutModalOpen}
+        onClose={handleCloseWorkoutModal}
+        session={editSession}
+        onSave={handleSaveActivity}
+      />
+      <LogTreadmillModal
+        open={treadmillModalOpen}
+        onClose={handleCloseTreadmillModal}
+        session={editSession}
+        onSave={handleSaveActivity}
+      />
+
       {/* Hero */}
       <div className="vitality-gradient px-5 pt-6 pb-5 relative overflow-hidden">
         <div className="relative z-10">
@@ -108,11 +199,17 @@ export default function ActivityPage() {
             Unleash Your Potential
           </h2>
           <div className="flex flex-wrap gap-2.5">
-            <button disabled className="bg-white text-primary px-5 py-2.5 rounded-full font-display font-bold text-sm flex items-center gap-2 opacity-60 cursor-not-allowed">
+            <button
+              onClick={() => { setEditSession(undefined); setWorkoutModalOpen(true); }}
+              className="bg-white text-primary px-5 py-2.5 rounded-full font-display font-bold text-sm flex items-center gap-2 hover:bg-white/90 transition-colors"
+            >
               <Plus size={15} strokeWidth={2.5} />
               Log Workout
             </button>
-            <button disabled className="bg-white/20 text-white px-5 py-2.5 rounded-full font-display font-bold text-sm flex items-center gap-2 opacity-60 cursor-not-allowed">
+            <button
+              onClick={() => { setEditSession(undefined); setTreadmillModalOpen(true); }}
+              className="bg-white/20 text-white px-5 py-2.5 rounded-full font-display font-bold text-sm flex items-center gap-2 hover:bg-white/30 transition-colors"
+            >
               <Activity size={15} strokeWidth={2} />
               Treadmill
             </button>
@@ -159,36 +256,12 @@ export default function ActivityPage() {
                 </div>
               </div>
 
-              <div className="bg-surface-container-low rounded-2xl p-5">
-                <div className="flex items-center justify-between mb-4">
-                  <h3 className="font-display font-bold text-title-md">Recent Exercise History</h3>
-                  <button className="text-primary font-display font-bold text-label-sm flex items-center gap-0.5 hover:underline">
-                    View All <ChevronRight size={14} />
-                  </button>
-                </div>
-                <div className="space-y-2.5">
-                  {EXERCISE_HISTORY.map((item) => {
-                    const Icon = item.icon;
-                    return (
-                      <div key={item.id} className="bg-surface-container-lowest p-3 rounded-xl flex items-center justify-between hover:translate-x-0.5 transition-transform cursor-pointer">
-                        <div className="flex items-center gap-3">
-                          <div className="w-11 h-11 rounded-xl bg-surface-container-low flex items-center justify-center flex-shrink-0">
-                            <Icon size={20} strokeWidth={1.75} className={item.iconColor} />
-                          </div>
-                          <div>
-                            <p className="font-display font-bold text-sm">{item.name}</p>
-                            <p className="text-label-sm text-on-surface-variant mt-0.5">{item.detail}</p>
-                          </div>
-                        </div>
-                        <div className="text-right">
-                          <p className="font-display font-bold text-title-md text-primary">{item.kcal}</p>
-                          <p className="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">Kcal</p>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
+              <ActivityHistory
+                workoutLogs={workoutLogs}
+                treadmillLogs={treadmillLogs}
+                onEdit={handleEditSession}
+                onDelete={deleteActivity}
+              />
             </section>
 
             {/* Right column */}
@@ -196,13 +269,46 @@ export default function ActivityPage() {
               <div className="bg-surface-container-high rounded-2xl p-5">
                 <h3 className="font-display font-bold text-title-md mb-4">Weight Log</h3>
 
-                <div className="aspect-square w-full rounded-xl border-2 border-dashed border-outline-variant bg-surface-container-lowest flex flex-col items-center justify-center gap-3 cursor-pointer hover:bg-white transition-colors mb-4">
-                  <div className="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center">
-                    <Camera size={28} strokeWidth={1.5} className="text-primary" />
-                  </div>
-                  <p className="font-display font-bold text-sm text-center px-4">Scan scale for weight entry</p>
-                  <p className="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">Auto-detecting display</p>
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/*"
+                  capture="environment"
+                  onChange={handleScanImage}
+                  className="hidden"
+                />
+                <div
+                  onClick={() => !scanning && fileInputRef.current?.click()}
+                  className="aspect-square w-full rounded-xl border-2 border-dashed border-outline-variant bg-surface-container-lowest flex flex-col items-center justify-center gap-3 cursor-pointer hover:bg-white transition-colors mb-4 overflow-hidden relative"
+                >
+                  {scanPreview ? (
+                    <>
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={scanPreview} alt="Scale preview" className="absolute inset-0 w-full h-full object-cover" />
+                      {scanning && (
+                        <div className="absolute inset-0 bg-black/50 flex flex-col items-center justify-center gap-2">
+                          <Loader2 size={32} strokeWidth={2} className="text-white animate-spin" />
+                          <p className="text-white font-display font-bold text-sm">Reading weight…</p>
+                        </div>
+                      )}
+                    </>
+                  ) : (
+                    <>
+                      <div className="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center">
+                        {scanning ? (
+                          <Loader2 size={28} strokeWidth={1.5} className="text-primary animate-spin" />
+                        ) : (
+                          <Camera size={28} strokeWidth={1.5} className="text-primary" />
+                        )}
+                      </div>
+                      <p className="font-display font-bold text-sm text-center px-4">Scan scale for weight entry</p>
+                      <p className="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">Auto-detecting display</p>
+                    </>
+                  )}
                 </div>
+                {scanError && (
+                  <p className="text-xs text-red-500 font-display font-semibold -mt-2 mb-3 px-1">{scanError}</p>
+                )}
 
                 <form onSubmit={handleLogWeight} className="space-y-2.5">
                   <p className="text-label-sm font-bold uppercase tracking-widest text-on-surface-variant">Manual Entry</p>
