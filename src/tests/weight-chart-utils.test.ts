@@ -105,7 +105,7 @@ describe('getDoseDateSet', () => {
     const dateSet = getDoseDateSet(doses)
     expect(dateSet.size).toBe(3)
     // Each value is a YYYY-MM-DD string
-    for (const d of dateSet) {
+    for (const d of Array.from(dateSet)) {
       expect(d).toMatch(/^\d{4}-\d{2}-\d{2}$/)
     }
   })
