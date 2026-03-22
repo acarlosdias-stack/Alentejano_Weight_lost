@@ -52,10 +52,12 @@ export function getMealState(now: Date): MealState {
   }
 
   // Fallback (shouldn't be reached given slot coverage)
+  const breakfast = TIMED_SLOTS.find((s) => s.key === 'breakfast')
+  const breakfastHour = breakfast?.startHour ?? 6
   return {
     kind: 'done',
     label: 'All done for today',
     title: 'Breakfast tomorrow',
-    subtitle: '06:00',
+    subtitle: `${String(breakfastHour).padStart(2, '0')}:00`,
   }
 }
