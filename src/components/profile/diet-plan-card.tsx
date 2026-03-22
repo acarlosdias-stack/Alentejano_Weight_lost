@@ -59,7 +59,7 @@ export function DietPlanCard({ imageUrl, uploading, error, onUpload }: DietPlanC
             {uploading ? "Uploading…" : "Upload diet plan image"}
           </span>
           <span className="text-label-sm text-on-surface/30">
-            Photo of your nutritionist's plan
+            Photo of your nutritionist&apos;s plan
           </span>
         </button>
       ) : (
@@ -80,7 +80,7 @@ export function DietPlanCard({ imageUrl, uploading, error, onUpload }: DietPlanC
           <div className="px-3 py-2 flex items-center justify-between">
             <div>
               <p className="text-label-sm font-semibold text-on-surface">diet_plan</p>
-              <p className="text-label-sm text-on-surface/50">Nutritionist's plan</p>
+              <p className="text-label-sm text-on-surface/50">Nutritionist&apos;s plan</p>
             </div>
           </div>
         </div>

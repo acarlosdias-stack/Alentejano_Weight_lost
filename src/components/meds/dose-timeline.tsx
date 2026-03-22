@@ -35,7 +35,7 @@ function getMonthLabel(iso: string) {
   return new Date(iso).toLocaleDateString("en", { month: "long", year: "numeric" }).toUpperCase();
 }
 
-export function DoseTimeline({ doses, pens, onUpdateDose: _onUpdateDose, onDeleteDose: _onDeleteDose }: DoseTimelineProps) {
+export function DoseTimeline({ doses, pens }: DoseTimelineProps) {
   const [sort, setSort] = useState<SortOrder>("newest");
 
   if (doses.length === 0) {

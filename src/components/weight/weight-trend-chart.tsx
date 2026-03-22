@@ -120,7 +120,7 @@ export function WeightTrendChart({ logs, doses, goalWeight }: WeightTrendChartPr
             tick={{ fontSize: 9, fill: "#c1c6d7" }}
             tickLine={false}
             axisLine={false}
-            tickFormatter={v => {
+            tickFormatter={(v: string) => {
               const d = new Date(v);
               return d.toLocaleDateString("en", { month: "short" });
             }}

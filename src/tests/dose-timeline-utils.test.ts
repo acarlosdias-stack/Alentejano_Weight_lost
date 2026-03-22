@@ -4,7 +4,6 @@ import {
   computeAdherence,
   exportDosesAsCsv,
   buildTimelineEntries,
-  type TimelineEntry,
 } from '@/lib/dose-timeline-utils'
 import type { Dose, Pen } from '@/lib/supabase/types'
 
