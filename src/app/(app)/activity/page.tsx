@@ -4,6 +4,8 @@ import { useCallback, useRef, useState } from "react";
 import { useProfile } from "@/hooks/use-profile";
 import { useWeight } from "@/hooks/use-weight";
 import { useActivity } from "@/hooks/use-activity";
+import { WeightTrendChart } from "@/components/weight/weight-trend-chart";
+import { useDoses } from "@/hooks/use-doses";
 import {
   Plus,
   Watch,
@@ -27,6 +29,7 @@ export default function ActivityPage() {
   const { profile } = useProfile();
   const { logs, logWeight, updateWeight, deleteWeight, getMonthlyChange } = useWeight();
   const { workoutLogs, treadmillLogs, addActivity, updateActivity, deleteActivity } = useActivity();
+  const { doses } = useDoses(); // no penId = all doses for dose-day markers
 
   const today = new Date().toISOString().split("T")[0];
 
@@ -266,6 +269,12 @@ export default function ActivityPage() {
 
             {/* Right column */}
             <aside className="md:col-span-4 space-y-4">
+              <WeightTrendChart
+                logs={logs}
+                doses={doses}
+                goalWeight={profile?.goal_weight_kg ?? null}
+              />
+
               <div className="bg-surface-container-high rounded-2xl p-5">
                 <h3 className="font-display font-bold text-title-md mb-4">Weight Log</h3>
 
