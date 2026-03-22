@@ -7,7 +7,7 @@ import { useDoses } from "@/hooks/use-doses";
 import { ActivePenCard } from "@/components/meds/active-pen-card";
 import { RegisterPenForm } from "@/components/meds/register-pen-form";
 import { LogDoseModal } from "@/components/meds/log-dose-modal";
-import { DoseHistory } from "@/components/meds/dose-history";
+import { DoseTimeline } from "@/components/meds/dose-timeline";
 import { TreatmentTip } from "@/components/meds/treatment-tip";
 import { EditPenModal } from "@/components/meds/edit-pen-modal";
 import { PenHistoryList } from "@/components/meds/pen-history";
@@ -56,8 +56,9 @@ export default function MedsPage() {
         {doses.length > 0 && (
           <div>
             <p className="text-label-sm text-on-surface/45 uppercase tracking-wider mb-3">Dose History</p>
-            <DoseHistory
+            <DoseTimeline
               doses={doses}
+              pens={pens}
               onUpdateDose={updateDose}
               onDeleteDose={deleteDose}
             />
