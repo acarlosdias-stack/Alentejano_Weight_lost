@@ -2,9 +2,7 @@ import { describe, it, expect } from 'vitest'
 import { getMealState } from '@/lib/meal-state'
 
 function makeDate(hour: number, minute = 0): Date {
-  const d = new Date()
-  d.setHours(hour, minute, 0, 0)
-  return d
+  return new Date(2024, 0, 15, hour, minute, 0, 0) // Jan 15 — not a DST transition
 }
 
 describe('getMealState', () => {
@@ -47,6 +45,13 @@ describe('getMealState', () => {
     const state = getMealState(makeDate(5, 58))
     expect(state.kind).toBe('upcoming')
     expect(state.subtitle).toContain('< 5 min')
+  })
+
+  it('shows countdown minutes at boundary just before < 5 min kicks in (05:56)', () => {
+    // 4 min to 06:00 → Math.round(4/5)*5 = 5 → "starts in 5 min"
+    const state = getMealState(makeDate(5, 56))
+    expect(state.kind).toBe('upcoming')
+    expect(state.subtitle).toContain('starts in 5 min')
   })
 
   it('returns done state after dinner (22:30)', () => {
