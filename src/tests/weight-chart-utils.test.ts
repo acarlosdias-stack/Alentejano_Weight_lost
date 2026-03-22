@@ -4,6 +4,7 @@ import {
   computeWeightStats,
   computeInsight,
   getDoseDateSet,
+  toChartData,
 } from '@/lib/weight-chart-utils'
 
 // Helpers
@@ -111,5 +112,30 @@ describe('getDoseDateSet', () => {
 
   it('returns empty set for empty doses', () => {
     expect(getDoseDateSet([]).size).toBe(0)
+  })
+})
+
+describe('toChartData', () => {
+  it('converts logs to { date, weight } objects', () => {
+    const data = toChartData(logs)
+    expect(data.length).toBe(4)
+    for (const d of data) {
+      expect(d).toHaveProperty('date')
+      expect(d).toHaveProperty('weight')
+      expect(d.date).toMatch(/^\d{4}-\d{2}-\d{2}$/)
+      expect(typeof d.weight).toBe('number')
+    }
+  })
+
+  it('sorts oldest-first regardless of input order', () => {
+    const unordered = [makeLog(96.3, 0), makeLog(102.0, 90), makeLog(98.0, 30)]
+    const data = toChartData(unordered)
+    // First entry should be oldest (highest daysAgo → earliest date)
+    expect(data[0].weight).toBe(102.0)
+    expect(data[data.length - 1].weight).toBe(96.3)
+  })
+
+  it('returns empty array for empty input', () => {
+    expect(toChartData([])).toEqual([])
   })
 })
