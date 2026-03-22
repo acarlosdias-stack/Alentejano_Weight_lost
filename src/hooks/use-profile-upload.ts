@@ -24,8 +24,7 @@ export function useProfileUpload(userId: string) {
         .upload(path, file, { upsert: true });
       if (error) return { error: "Erro ao carregar imagem. Tenta novamente." };
       const { data } = supabase.storage.from("avatars").getPublicUrl(path);
-      // Bust cache with a timestamp query param
-      return { url: `${data.publicUrl}?t=${Date.now()}` };
+      return { url: data.publicUrl };
     },
     [supabase, userId]
   );
@@ -42,7 +41,7 @@ export function useProfileUpload(userId: string) {
         .upload(path, file, { upsert: true });
       if (error) return { error: "Erro ao carregar imagem. Tenta novamente." };
       const { data } = supabase.storage.from("diet-plans").getPublicUrl(path);
-      return { url: `${data.publicUrl}?t=${Date.now()}` };
+      return { url: data.publicUrl };
     },
     [supabase, userId]
   );
