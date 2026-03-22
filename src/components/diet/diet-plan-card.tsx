@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { X } from "lucide-react";
+import { X, ClipboardList } from "lucide-react";
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 
 interface DietPagePlanCardProps {
@@ -17,9 +17,7 @@ export function DietPagePlanCard({ imageUrl }: DietPagePlanCardProps) {
     return (
       <div className="bg-surface-container-lowest rounded-2xl px-4 py-3 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" className="text-on-surface/30">
-            <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
-          </svg>
+          <ClipboardList size={16} className="text-on-surface/30" />
           <span className="text-label-sm text-on-surface/50">Plano alimentar não carregado</span>
         </div>
         <Link

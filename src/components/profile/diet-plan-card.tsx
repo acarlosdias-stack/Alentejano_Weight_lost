@@ -2,7 +2,7 @@
 
 import { useRef, useState } from "react";
 import Image from "next/image";
-import { Upload, X, RefreshCw } from "lucide-react";
+import { Upload, X, RefreshCw, ClipboardList } from "lucide-react";
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 
 interface DietPlanCardProps {
@@ -20,15 +20,14 @@ export function DietPlanCard({ imageUrl, uploading, error, onUpload }: DietPlanC
     const file = e.target.files?.[0];
     if (!file) return;
     await onUpload(file);
+    e.target.value = "";
   }
 
   return (
     <div className="bg-surface-container-lowest rounded-2xl p-4 space-y-3">
       <div className="flex items-center justify-between">
         <h3 className="font-display text-title-sm font-semibold flex items-center gap-2">
-          <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" className="text-primary">
-            <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
-          </svg>
+          <ClipboardList size={16} className="text-primary" />
           Plano Alimentar
         </h3>
         {imageUrl && (
@@ -81,7 +80,7 @@ export function DietPlanCard({ imageUrl, uploading, error, onUpload }: DietPlanC
           <div className="px-3 py-2 flex items-center justify-between">
             <div>
               <p className="text-label-sm font-semibold text-on-surface">plano_alimentar</p>
-              <p className="text-label-sm text-on-surface/50">Atualizado hoje</p>
+              <p className="text-label-sm text-on-surface/50">Plano do nutricionista</p>
             </div>
           </div>
         </div>

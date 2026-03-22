@@ -14,6 +14,7 @@ export function useProfileUpload(userId: string) {
 
   const uploadAvatar = useCallback(
     async (file: File): Promise<{ url: string } | { error: string }> => {
+      if (!userId) return { error: "Sessão inválida. Volta a iniciar sessão." };
       if (file.size > MAX_FILE_SIZE) {
         return { error: "Ficheiro demasiado grande (máx. 10MB)" };
       }
@@ -31,6 +32,7 @@ export function useProfileUpload(userId: string) {
 
   const uploadDietPlan = useCallback(
     async (file: File): Promise<{ url: string } | { error: string }> => {
+      if (!userId) return { error: "Sessão inválida. Volta a iniciar sessão." };
       if (file.size > MAX_FILE_SIZE) {
         return { error: "Ficheiro demasiado grande (máx. 10MB)" };
       }

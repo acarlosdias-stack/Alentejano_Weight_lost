@@ -32,6 +32,7 @@ export function UserHeader({ profile, onSignOut, onAvatarChange }: UserHeaderPro
       setAvatarError(err);
       setLocalAvatarUrl(null);
     }
+    e.target.value = "";
   }
 
   const displayAvatar = localAvatarUrl ?? profile.avatar_url;
