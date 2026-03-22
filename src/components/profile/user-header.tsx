@@ -38,13 +38,13 @@ export function UserHeader({ profile, onSignOut, onAvatarChange }: UserHeaderPro
 
   return (
     <div className="vitality-gradient px-5 pt-12 pb-8 relative">
-      {/* Sair chip */}
+      {/* Sign out chip */}
       <button
         onClick={onSignOut}
         className="absolute top-4 right-4 flex items-center gap-1.5 bg-white/15 border border-white/25 rounded-full px-3 py-1.5 text-white text-label-sm font-semibold hover:bg-white/25 transition-colors active:scale-95"
       >
         <LogOut size={13} strokeWidth={2.5} />
-        Sair
+        Sign out
       </button>
 
       <div className="flex flex-col items-center text-center space-y-3">
@@ -101,7 +101,7 @@ export function UserHeader({ profile, onSignOut, onAvatarChange }: UserHeaderPro
           <div className="flex items-center gap-2 bg-white/15 px-4 py-2 rounded-full">
             <Badge variant="success">Active</Badge>
             <span className="text-label-sm text-white/80">
-              Objetivo:{" "}
+              Goal:{" "}
               {Math.round((profile.current_weight_kg - profile.goal_weight_kg) * 10) / 10}kg
             </span>
           </div>

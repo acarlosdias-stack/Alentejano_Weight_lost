@@ -51,7 +51,7 @@ export default function ProfilePage() {
   }
 
   if (!profile) {
-    return <p className="text-body-md text-on-surface/50">A configurar perfil…</p>;
+    return <p className="text-body-md text-on-surface/50">Setting up profile…</p>;
   }
 
   return (
@@ -117,7 +117,7 @@ export default function ProfilePage() {
           fullWidth
           onClick={() => setEditOpen(true)}
         >
-          Editar Perfil
+          Edit Profile
         </Button>
       </div>
 
