@@ -79,7 +79,7 @@ export function AddMealModal({ open, onClose, onSave, slot }: AddMealModalProps)
         {/* Name field */}
         <Input
           label="Meal name"
-          placeholder="e.g. Bacalhau com grão"
+          placeholder="e.g. Grilled chicken breast"
           value={name}
           onChange={(e) => setName(e.target.value)}
           autoFocus

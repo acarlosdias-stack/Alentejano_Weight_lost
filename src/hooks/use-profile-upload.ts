@@ -14,15 +14,15 @@ export function useProfileUpload(userId: string) {
 
   const uploadAvatar = useCallback(
     async (file: File): Promise<{ url: string } | { error: string }> => {
-      if (!userId) return { error: "Sessão inválida. Volta a iniciar sessão." };
+      if (!userId) return { error: "Invalid session. Please sign in again." };
       if (file.size > MAX_FILE_SIZE) {
-        return { error: "Ficheiro demasiado grande (máx. 10MB)" };
+        return { error: "File too large (max. 10MB)" };
       }
       const path = `${userId}/avatar.${getExt(file)}`;
       const { error } = await supabase.storage
         .from("avatars")
         .upload(path, file, { upsert: true });
-      if (error) return { error: "Erro ao carregar imagem. Tenta novamente." };
+      if (error) return { error: "Failed to upload image. Please try again." };
       const { data } = supabase.storage.from("avatars").getPublicUrl(path);
       return { url: data.publicUrl };
     },
@@ -31,15 +31,15 @@ export function useProfileUpload(userId: string) {
 
   const uploadDietPlan = useCallback(
     async (file: File): Promise<{ url: string } | { error: string }> => {
-      if (!userId) return { error: "Sessão inválida. Volta a iniciar sessão." };
+      if (!userId) return { error: "Invalid session. Please sign in again." };
       if (file.size > MAX_FILE_SIZE) {
-        return { error: "Ficheiro demasiado grande (máx. 10MB)" };
+        return { error: "File too large (max. 10MB)" };
       }
       const path = `${userId}/diet-plan.${getExt(file)}`;
       const { error } = await supabase.storage
         .from("diet-plans")
         .upload(path, file, { upsert: true });
-      if (error) return { error: "Erro ao carregar imagem. Tenta novamente." };
+      if (error) return { error: "Failed to upload image. Please try again." };
       const { data } = supabase.storage.from("diet-plans").getPublicUrl(path);
       return { url: data.publicUrl };
     },
