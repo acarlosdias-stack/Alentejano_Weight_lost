@@ -6,6 +6,7 @@ import { usePens } from "@/hooks/use-pens";
 import { useDoses } from "@/hooks/use-doses";
 import { useWeight } from "@/hooks/use-weight";
 import { MomentumCard } from "@/components/home/momentum-card";
+import { NextMealCard } from "@/components/home/next-meal-card";
 import { Calendar } from "lucide-react";
 import { formatDate } from "@/lib/utils";
 
@@ -109,6 +110,9 @@ export default function HomePage() {
             </div>
           </Link>
         </div>
+
+        {/* Next meal */}
+        <NextMealCard />
 
         {/* Next injection card */}
         {activePen && (
