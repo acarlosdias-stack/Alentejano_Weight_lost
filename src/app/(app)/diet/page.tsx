@@ -8,6 +8,7 @@ import { QuickLogBar } from "@/components/diet/quick-log-bar";
 import { MealSlot } from "@/components/diet/meal-slot";
 import { AddMealModal } from "@/components/diet/add-meal-modal";
 import { MEAL_SLOTS, type MealSlotType, type QuickLogPreset } from "@/lib/diet-presets";
+import { DietPagePlanCard } from "@/components/diet/diet-plan-card";
 
 export default function DietPage() {
   const { profile, loading: profileLoading } = useProfile();
@@ -48,6 +49,7 @@ export default function DietPage() {
 
       {/* Tonal section */}
       <div className="bg-surface-container-low px-5 pt-4 pb-24 space-y-4">
+        <DietPagePlanCard imageUrl={profile.diet_plan_image_url ?? null} />
         <QuickLogBar onLog={handleQuickLog} />
 
         {MEAL_SLOTS.map((config) => (
