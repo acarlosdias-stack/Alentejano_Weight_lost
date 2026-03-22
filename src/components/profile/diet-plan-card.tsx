@@ -27,17 +27,18 @@ export function DietPlanCard({ imageUrl, uploading, error, onUpload }: DietPlanC
       <div className="flex items-center justify-between">
         <h3 className="font-display text-title-sm font-semibold flex items-center gap-2">
           <ClipboardList size={16} className="text-primary" />
-          Plano Alimentar
+          Diet Plan
         </h3>
         {imageUrl && (
           <button
             type="button"
             onClick={() => fileRef.current?.click()}
             disabled={uploading}
-            className="text-on-surface/40 hover:text-on-surface/70 transition-colors"
-            aria-label="Substituir imagem"
+            className="flex items-center gap-1.5 text-label-sm font-semibold text-primary hover:opacity-70 transition-opacity"
+            aria-label="Change diet plan image"
           >
-            <RefreshCw size={16} />
+            <RefreshCw size={14} />
+            Change
           </button>
         )}
       </div>
@@ -55,10 +56,10 @@ export function DietPlanCard({ imageUrl, uploading, error, onUpload }: DietPlanC
         >
           <Upload size={28} className="text-on-surface/30" strokeWidth={1.5} />
           <span className="text-body-md text-on-surface/60 font-medium">
-            {uploading ? "A carregar…" : "Carregar imagem do plano"}
+            {uploading ? "Uploading…" : "Upload diet plan image"}
           </span>
           <span className="text-label-sm text-on-surface/30">
-            Foto do plano do nutricionista
+            Photo of your nutritionist's plan
           </span>
         </button>
       ) : (
@@ -67,19 +68,19 @@ export function DietPlanCard({ imageUrl, uploading, error, onUpload }: DietPlanC
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={imageUrl}
-              alt="Plano alimentar"
+              alt="Diet plan"
               className="w-full h-full object-cover"
             />
             <div className="absolute inset-0 bg-black/0 hover:bg-black/10 transition-colors flex items-end justify-end p-3">
               <span className="bg-primary text-white text-label-sm font-bold px-3 py-1.5 rounded-full shadow">
-                Ver
+                View
               </span>
             </div>
           </div>
           <div className="px-3 py-2 flex items-center justify-between">
             <div>
-              <p className="text-label-sm font-semibold text-on-surface">plano_alimentar</p>
-              <p className="text-label-sm text-on-surface/50">Plano do nutricionista</p>
+              <p className="text-label-sm font-semibold text-on-surface">diet_plan</p>
+              <p className="text-label-sm text-on-surface/50">Nutritionist's plan</p>
             </div>
           </div>
         </div>
@@ -99,7 +100,7 @@ export function DietPlanCard({ imageUrl, uploading, error, onUpload }: DietPlanC
           <button
             onClick={() => setLightboxOpen(false)}
             className="absolute top-4 right-4 z-10 w-10 h-10 bg-white/20 rounded-full flex items-center justify-center text-white hover:bg-white/30 transition-colors"
-            aria-label="Fechar"
+            aria-label="Close"
           >
             <X size={20} />
           </button>
@@ -115,7 +116,7 @@ export function DietPlanCard({ imageUrl, uploading, error, onUpload }: DietPlanC
             >
               <img
                 src={imageUrl}
-                alt="Plano alimentar"
+                alt="Diet plan"
                 style={{ maxWidth: "100vw", maxHeight: "100vh", objectFit: "contain" }}
               />
             </TransformComponent>

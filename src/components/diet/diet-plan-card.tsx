@@ -17,13 +17,13 @@ export function DietPagePlanCard({ imageUrl }: DietPagePlanCardProps) {
       <div className="bg-surface-container-lowest rounded-2xl px-4 py-3 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <ClipboardList size={16} className="text-on-surface/30" />
-          <span className="text-label-sm text-on-surface/50">Plano alimentar não carregado</span>
+          <span className="text-label-sm text-on-surface/50">Diet plan not uploaded</span>
         </div>
         <Link
           href="/profile"
           className="text-label-sm font-semibold text-primary hover:underline"
         >
-          Carregar
+          Upload
         </Link>
       </div>
     );
@@ -37,16 +37,16 @@ export function DietPagePlanCard({ imageUrl }: DietPagePlanCardProps) {
       >
         <div className="relative w-full h-24">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={imageUrl} alt="Plano alimentar" className="w-full h-full object-cover object-top" />
+          <img src={imageUrl} alt="Diet plan" className="w-full h-full object-cover object-top" />
           <div className="absolute inset-0 bg-gradient-to-r from-black/30 to-transparent flex items-center px-4">
             <div>
-              <p className="text-white text-label-sm uppercase tracking-wider font-semibold opacity-80">Plano Alimentar</p>
-              <p className="text-white font-display text-title-sm font-bold">Ver plano</p>
+              <p className="text-white text-label-sm uppercase tracking-wider font-semibold opacity-80">Diet Plan</p>
+              <p className="text-white font-display text-title-sm font-bold">View plan</p>
             </div>
           </div>
           <div className="absolute right-3 top-1/2 -translate-y-1/2">
             <span className="bg-primary text-white text-label-sm font-bold px-3 py-1.5 rounded-full shadow">
-              Ver Plano
+              View Plan
             </span>
           </div>
         </div>
@@ -57,7 +57,7 @@ export function DietPagePlanCard({ imageUrl }: DietPagePlanCardProps) {
           <button
             onClick={() => setLightboxOpen(false)}
             className="absolute top-4 right-4 z-10 w-10 h-10 bg-white/20 rounded-full flex items-center justify-center text-white hover:bg-white/30 transition-colors"
-            aria-label="Fechar"
+            aria-label="Close"
           >
             <X size={20} />
           </button>
@@ -68,7 +68,7 @@ export function DietPagePlanCard({ imageUrl }: DietPagePlanCardProps) {
             >
               <img
                 src={imageUrl}
-                alt="Plano alimentar"
+                alt="Diet plan"
                 style={{ maxWidth: "100vw", maxHeight: "100vh", objectFit: "contain" }}
               />
             </TransformComponent>
